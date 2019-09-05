@@ -2,8 +2,8 @@ package com.ambroziepaval.spring5recipeapp.services;
 
 import com.ambroziepaval.spring5recipeapp.domain.Recipe;
 import com.ambroziepaval.spring5recipeapp.repositories.RecipeRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -11,24 +11,25 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-public class RecipeServiceImplTest {
+class RecipeServiceImplTest {
 
     private RecipeServiceImpl recipeService;
 
     @Mock
     private RecipeRepository recipeRepository;
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         recipeService = new RecipeServiceImpl(recipeRepository);
     }
 
     @Test
-    public void getRecipeByIdTest() {
+    void getRecipeByIdTest() {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
@@ -37,13 +38,13 @@ public class RecipeServiceImplTest {
 
         Recipe recipeReturned = recipeService.findById(1L);
 
-        assertNotNull("Null recipe returned", recipeReturned);
+        assertNotNull(recipeReturned, "Null recipe returned");
         verify(recipeRepository, times(1)).findById(anyLong());
         verify(recipeRepository, never()).findAll();
     }
 
     @Test
-    public void getRecipes() {
+    void getRecipes() {
 
         Recipe recipe = new Recipe();
         Set<Recipe> recipesData = new HashSet<>();

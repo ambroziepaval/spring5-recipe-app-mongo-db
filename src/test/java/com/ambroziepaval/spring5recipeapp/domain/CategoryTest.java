@@ -1,21 +1,21 @@
 package com.ambroziepaval.spring5recipeapp.domain;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CategoryTest {
+class CategoryTest {
 
     Category category;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         category = new Category();
     }
 
     @Test
-    public void getId() {
+    void getId() {
         Long idValue = 4L;
 
         category.setId(idValue);
@@ -24,7 +24,7 @@ public class CategoryTest {
     }
 
     @Test
-    public void getDescription() {
+    void getDescription() {
         String descriptionValue = "Test description";
 
         category.setDescription(descriptionValue);
