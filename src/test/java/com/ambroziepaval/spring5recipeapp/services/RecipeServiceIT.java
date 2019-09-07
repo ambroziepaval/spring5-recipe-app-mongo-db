@@ -5,6 +5,7 @@ import com.ambroziepaval.spring5recipeapp.converters.RecipeCommandToRecipe;
 import com.ambroziepaval.spring5recipeapp.converters.RecipeToRecipeCommand;
 import com.ambroziepaval.spring5recipeapp.domain.Recipe;
 import com.ambroziepaval.spring5recipeapp.repositories.RecipeRepository;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -31,7 +32,8 @@ public class RecipeServiceIT {
     @Autowired
     RecipeToRecipeCommand recipeToRecipeCommand;
 
-    public void testSaveOfDescription() {
+    @Test
+    void testSaveOfDescription() {
         //given
         Iterable<Recipe> recipes = recipeRepository.findAll();
         Recipe testRecipe = recipes.iterator().next();
