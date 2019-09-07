@@ -1,10 +1,13 @@
 package com.ambroziepaval.spring5recipeapp.converters;
+
 import com.ambroziepaval.spring5recipeapp.commands.IngredientCommand;
 import com.ambroziepaval.spring5recipeapp.domain.Ingredient;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
+
+import java.util.Objects;
 
 @Component
 public class IngredientToIngredientCommand implements Converter<Ingredient, IngredientCommand> {
@@ -25,6 +28,9 @@ public class IngredientToIngredientCommand implements Converter<Ingredient, Ingr
 
         IngredientCommand ingredientCommand = new IngredientCommand();
         ingredientCommand.setId(ingredient.getId());
+        if (Objects.nonNull(ingredient.getRecipe())) {
+            ingredientCommand.setRecipeId(ingredient.getRecipe().getId());
+        }
         ingredientCommand.setAmount(ingredient.getAmount());
         ingredientCommand.setDescription(ingredient.getDescription());
         ingredientCommand.setUnitOfMeasure(uomConverter.convert(ingredient.getUom()));
