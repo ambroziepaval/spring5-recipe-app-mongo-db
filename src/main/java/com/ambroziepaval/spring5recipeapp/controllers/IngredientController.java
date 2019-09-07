@@ -6,20 +6,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Slf4j
 @AllArgsConstructor
 @Controller
-public class IndexController {
+public class IngredientController {
 
     private final RecipeService recipeService;
 
-    @GetMapping({"", "/", "/index", "/index.html"})
-    public String getIndexPage(Model model) {
-        log.debug("Getting index page.");
+    @GetMapping("/recipe/{recipeId}/ingredients")
+    public String listIngredients(@PathVariable Long recipeId, Model model) {
+        log.debug("Getting ingredient list for recipe with id: " + recipeId);
 
-        model.addAttribute("recipes", recipeService.getRecipes());
+        model.addAttribute("recipe", recipeService.findCommandById(recipeId));
 
-        return "index";
+        return "recipe/ingredient/list";
     }
 }
+
+
