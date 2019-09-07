@@ -1,23 +1,27 @@
 package com.ambroziepaval.spring5recipeapp.services;
 
+import com.ambroziepaval.spring5recipeapp.commands.RecipeCommand;
+import com.ambroziepaval.spring5recipeapp.converters.RecipeCommandToRecipe;
+import com.ambroziepaval.spring5recipeapp.converters.RecipeToRecipeCommand;
 import com.ambroziepaval.spring5recipeapp.domain.Recipe;
 import com.ambroziepaval.spring5recipeapp.repositories.RecipeRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
-
-    public RecipeServiceImpl(RecipeRepository recipeRepository) {
-        this.recipeRepository = recipeRepository;
-    }
+    private final RecipeToRecipeCommand recipeToRecipeCommand;
+    private final RecipeCommandToRecipe recipeCommandToRecipe;
 
     @Override
     public Set<Recipe> getRecipes() {
@@ -32,10 +36,20 @@ public class RecipeServiceImpl implements RecipeService {
 
         Optional<Recipe> recipeOptional = recipeRepository.findById(id);
 
-        if (!recipeOptional.isPresent()) {
+        if (recipeOptional.isEmpty()) {
             throw new RuntimeException("Recipe Not Found!");
         }
 
         return recipeOptional.get();
+    }
+
+    @Override
+    @Transactional
+    public RecipeCommand saveRecipeCommand(RecipeCommand command) {
+        Recipe detachedRecipe = recipeCommandToRecipe.convert(command);
+
+        Recipe savedRecipe = recipeRepository.save(detachedRecipe);
+        log.debug("Saved RecipeId: " + savedRecipe.getId());
+        return recipeToRecipeCommand.convert(savedRecipe);
     }
 }

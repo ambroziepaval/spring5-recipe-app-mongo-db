@@ -1,7 +1,6 @@
 package com.ambroziepaval.spring5recipeapp.repositories;
 
 import com.ambroziepaval.spring5recipeapp.domain.UnitOfMeasure;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @ExtendWith(SpringExtension.class)
 // Brings up an embedded database and it also configures Sprint Data JPA
+// Data loaded from the data.sql file
 @DataJpaTest
 public class UnitOfMeasureRepositoryIT {
 
     @Autowired
     UnitOfMeasureRepository unitOfMeasureRepository;
-
-    @BeforeEach
-    public void setUp() throws Exception {
-    }
 
     @Test
     // doing something that changes the data and do not want to contaminate the other tests

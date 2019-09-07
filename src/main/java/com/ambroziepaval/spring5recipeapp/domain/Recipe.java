@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -43,6 +44,11 @@ public class Recipe {
     private Set<Category> categories = new HashSet<>();
 
     public void setNotes(Notes notes) {
+
+        if (Objects.isNull(notes)) {
+            return;
+        }
+
         this.notes = notes;
         notes.setRecipe(this);
     }
