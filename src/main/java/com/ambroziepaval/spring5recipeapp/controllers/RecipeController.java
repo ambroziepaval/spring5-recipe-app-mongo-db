@@ -9,29 +9,40 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class RecipeController {
 
+    private static final String RECIPE_MODEL_ATTRIBUTE = "recipe";
+
     private final RecipeService recipeService;
 
     public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
     }
 
-    @GetMapping("/recipe/show/{id}")
+    @GetMapping("/recipe/{id}/show")
     public String showById(@PathVariable Long id, Model model) {
-        model.addAttribute("recipe", recipeService.findById(id));
+
+        model.addAttribute(RECIPE_MODEL_ATTRIBUTE, recipeService.findById(id));
         return "recipe/show";
     }
 
     @GetMapping("recipe/new")
     public String newRecipe(Model model) {
-        model.addAttribute("recipe", new RecipeCommand());
 
+        model.addAttribute(RECIPE_MODEL_ATTRIBUTE, new RecipeCommand());
         return "recipe/recipeForm";
     }
 
+    @GetMapping("recipe/{id}/update")
+    public String updateRecipe(Model model, @PathVariable Long id) {
+
+        model.addAttribute(RECIPE_MODEL_ATTRIBUTE, recipeService.findCommandById(id));
+        return "recipe/recipeForm";
+    }
+
+
     @PostMapping("recipe")
     public String saveOrUpdate(@ModelAttribute RecipeCommand command) {
-        RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
 
-        return "redirect:/recipe/show/" + savedCommand.getId();
+        RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
+        return "redirect:/recipe/" + savedCommand.getId() + "/show";
     }
 }
