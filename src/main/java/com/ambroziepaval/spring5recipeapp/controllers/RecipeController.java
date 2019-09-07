@@ -38,11 +38,16 @@ public class RecipeController {
         return "recipe/recipeForm";
     }
 
-
     @PostMapping("recipe")
-    public String saveOrUpdate(@ModelAttribute RecipeCommand command) {
+    public String saveOrUpdateRecipe(@ModelAttribute RecipeCommand command) {
 
         RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
         return "redirect:/recipe/" + savedCommand.getId() + "/show";
+    }
+
+    @GetMapping("recipe/{id}/delete")
+    public String deleteRecipe(@PathVariable Long id) {
+        recipeService.deleteById(id);
+        return "redirect:/";
     }
 }
