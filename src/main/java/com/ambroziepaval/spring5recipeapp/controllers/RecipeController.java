@@ -1,12 +1,17 @@
 package com.ambroziepaval.spring5recipeapp.controllers;
 
 import com.ambroziepaval.spring5recipeapp.commands.RecipeCommand;
+import com.ambroziepaval.spring5recipeapp.exceptions.NotFoundException;
 import com.ambroziepaval.spring5recipeapp.services.RecipeService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+@Slf4j
 @Controller
 @AllArgsConstructor
 public class RecipeController {
@@ -47,5 +52,18 @@ public class RecipeController {
     public String deleteRecipe(@PathVariable Long id) {
         recipeService.deleteById(id);
         return "redirect:/";
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ModelAndView handleNotFound(Exception exception) {
+        log.error("Handling not found exception");
+        log.error(exception.getMessage());
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("404error");
+        modelAndView.addObject("exception", exception);
+
+        return modelAndView;
     }
 }
