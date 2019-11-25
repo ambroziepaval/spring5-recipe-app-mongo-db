@@ -2,6 +2,7 @@ package com.ambroziepaval.spring5recipeapp.controllers;
 
 import com.ambroziepaval.spring5recipeapp.commands.RecipeCommand;
 import com.ambroziepaval.spring5recipeapp.domain.Recipe;
+import com.ambroziepaval.spring5recipeapp.exceptions.NotFoundException;
 import com.ambroziepaval.spring5recipeapp.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,6 +62,15 @@ class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/recipeForm"))
                 .andExpect(model().attributeExists("recipe"));
+    }
+
+    @Test
+    void testGetRecipeNotFound() throws Exception {
+
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
