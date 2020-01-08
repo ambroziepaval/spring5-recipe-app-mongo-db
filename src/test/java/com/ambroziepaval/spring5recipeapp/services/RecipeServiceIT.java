@@ -5,6 +5,7 @@ import com.ambroziepaval.spring5recipeapp.converters.RecipeCommandToRecipe;
 import com.ambroziepaval.spring5recipeapp.converters.RecipeToRecipeCommand;
 import com.ambroziepaval.spring5recipeapp.domain.Recipe;
 import com.ambroziepaval.spring5recipeapp.repositories.RecipeRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@Disabled
 public class RecipeServiceIT {
 
     private static final String NEW_DESCRIPTION = "New Description";
