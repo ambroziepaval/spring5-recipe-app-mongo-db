@@ -45,3 +45,5 @@ jobs:
 
       - store_artifacts:
           path:  target
+      - codecov/upload:
+          file: {{ target/jacoco.exec }}
