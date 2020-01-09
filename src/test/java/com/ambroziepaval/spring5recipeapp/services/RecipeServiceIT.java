@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@Disabled
 public class RecipeServiceIT {
 
     private static final String NEW_DESCRIPTION = "New Description";
@@ -26,9 +25,6 @@ public class RecipeServiceIT {
 
     @Autowired
     RecipeRepository recipeRepository;
-
-    @Autowired
-    RecipeCommandToRecipe recipeCommandToRecipe;
 
     @Autowired
     RecipeToRecipeCommand recipeToRecipeCommand;
