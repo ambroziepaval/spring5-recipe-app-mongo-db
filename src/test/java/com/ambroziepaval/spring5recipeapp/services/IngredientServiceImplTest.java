@@ -27,6 +27,7 @@ class IngredientServiceImplTest {
 
     @Mock
     private RecipeReactiveRepository recipeReactiveRepository;
+    @Mock
     private UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
     private IngredientService ingredientService;
@@ -115,7 +116,7 @@ class IngredientServiceImplTest {
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
         when(recipeReactiveRepository.findById(anyString())).thenReturn(Mono.justOrEmpty(recipeOptional));
-        when(recipeReactiveRepository.save(any(Recipe.class))).thenReturn(Mono.empty());
+        when(recipeReactiveRepository.save(any(Recipe.class))).thenReturn(Mono.just(recipe));
 
         //when
         ingredientService.deleteById("1", "3");

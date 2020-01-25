@@ -2,7 +2,6 @@ package com.ambroziepaval.spring5recipeapp.domain;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashSet;
@@ -30,7 +29,6 @@ public class Recipe {
     private Difficulty difficulty;
     private Notes notes;
 
-    @DBRef
     private Set<Category> categories = new HashSet<>();
 
     public void setNotes(Notes notes) {
@@ -40,11 +38,9 @@ public class Recipe {
         }
 
         this.notes = notes;
-//        notes.setRecipe(this);
     }
 
     public Recipe addIngredient(Ingredient ingredient) {
-//        ingredient.setRecipe(this);
         ingredients.add(ingredient);
         return this;
     }
