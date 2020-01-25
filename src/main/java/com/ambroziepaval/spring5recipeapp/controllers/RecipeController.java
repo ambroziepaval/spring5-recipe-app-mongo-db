@@ -1,16 +1,16 @@
 package com.ambroziepaval.spring5recipeapp.controllers;
 
 import com.ambroziepaval.spring5recipeapp.commands.RecipeCommand;
-import com.ambroziepaval.spring5recipeapp.exceptions.NotFoundException;
 import com.ambroziepaval.spring5recipeapp.services.RecipeService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 
@@ -27,7 +27,7 @@ public class RecipeController {
     @GetMapping("/recipe/{id}/show")
     public String showById(@PathVariable String id, Model model) {
 
-        model.addAttribute(RECIPE_MODEL_ATTRIBUTE, recipeService.findById(id).block());
+        model.addAttribute(RECIPE_MODEL_ATTRIBUTE, recipeService.findById(id));
         return "recipe/show";
     }
 
@@ -41,7 +41,7 @@ public class RecipeController {
     @GetMapping("recipe/{id}/update")
     public String updateRecipe(Model model, @PathVariable String id) {
 
-        model.addAttribute(RECIPE_MODEL_ATTRIBUTE, recipeService.findCommandById(id).block());
+        model.addAttribute(RECIPE_MODEL_ATTRIBUTE, recipeService.findCommandById(id));
         return RECIPE_RECIPEFORM_URL;
     }
 
@@ -65,16 +65,16 @@ public class RecipeController {
         return "redirect:/";
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException.class)
-    public ModelAndView handleNotFound(Exception exception) {
-        log.error("Handling not found exception");
-        log.error(exception.getMessage());
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("404error");
-        modelAndView.addObject("exception", exception);
-
-        return modelAndView;
-    }
+//    @ResponseStatus(HttpStatus.NOT_FOUND)
+//    @ExceptionHandler(NotFoundException.class)
+//    public ModelAndView handleNotFound(Exception exception) {
+//        log.error("Handling not found exception");
+//        log.error(exception.getMessage());
+//
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("404error");
+//        modelAndView.addObject("exception", exception);
+//
+//        return modelAndView;
+//    }
 }
