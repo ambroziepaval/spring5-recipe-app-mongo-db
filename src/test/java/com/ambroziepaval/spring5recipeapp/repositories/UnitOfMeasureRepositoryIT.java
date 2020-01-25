@@ -2,7 +2,6 @@ package com.ambroziepaval.spring5recipeapp.repositories;
 
 import com.ambroziepaval.spring5recipeapp.bootstrap.RecipeBootstrap;
 import com.ambroziepaval.spring5recipeapp.domain.UnitOfMeasure;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,7 +32,7 @@ public class UnitOfMeasureRepositoryIT {
     void setUp() {
         recipeRepository.deleteAll();
         categoryRepository.deleteAll();
-        recipeRepository.deleteAll();
+        unitOfMeasureRepository.deleteAll();
 
         RecipeBootstrap recipeBootstrap = new RecipeBootstrap(categoryRepository, recipeRepository, unitOfMeasureRepository);
 
