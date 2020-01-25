@@ -1,12 +1,12 @@
 package com.ambroziepaval.spring5recipeapp.services;
 
 import com.ambroziepaval.spring5recipeapp.domain.Recipe;
-import com.ambroziepaval.spring5recipeapp.repositories.RecipeRepository;
+import com.ambroziepaval.spring5recipeapp.repositories.reactive.RecipeReactiveRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 
@@ -15,28 +15,34 @@ import java.io.IOException;
 @AllArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
-    private final RecipeRepository recipeRepository;
+    private final RecipeReactiveRepository recipeReactiveRepository;
 
     @Override
-    @Transactional
-    public void saveImageFile(String recipeId, MultipartFile file) {
+    public Mono<Void> saveImageFile(String recipeId, MultipartFile file) {
 
-        try {
-            Recipe recipe = recipeRepository.findById(recipeId).get();
+        Mono<Recipe> recipeMono = recipeReactiveRepository.findById(recipeId)
+                .map(recipe -> {
 
-            Byte[] byteObjects = new Byte[file.getBytes().length];
+                    Byte[] byteObjects;
+                    try {
+                        byteObjects = new Byte[file.getBytes().length];
 
-            int i = 0;
-            for (byte b : file.getBytes()) {
-                byteObjects[i++] = b;
-            }
+                        int i = 0;
+                        for (byte b : file.getBytes()) {
+                            byteObjects[i++] = b;
+                        }
 
-            recipe.setImage(byteObjects);
-            recipeRepository.save(recipe);
+                        recipe.setImage(byteObjects);
+                        return recipe;
 
-        } catch (IOException e) {
-            //todo handle better
-            log.error("Error occurred", e);
-        }
+                    } catch (IOException e) {
+                        log.error("Error occurred on image save.", e);
+                        throw new RuntimeException(e);
+                    }
+                });
+
+        recipeReactiveRepository.save(recipeMono.block()).block();
+
+        return Mono.empty();
     }
 }
