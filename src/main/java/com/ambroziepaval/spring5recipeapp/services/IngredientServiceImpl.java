@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -28,29 +29,15 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public Mono<IngredientCommand> findByRecipeIdAndIngredientId(String recipeId, String ingredientId) {
 
-        Optional<Recipe> recipeOptional = recipeReactiveRepository.findById(recipeId).blockOptional();
-
-        if (recipeOptional.isEmpty()) {
-            // TODO error handling
-            log.error("Recipe id not found. Id: " + recipeId);
-        }
-
-        Recipe recipe = recipeOptional.get();
-
-        Optional<IngredientCommand> ingredientCommandOptional = recipe.getIngredients().stream()
-                .filter(ingredient -> ingredient.getId().equals(ingredientId))
-                .map(ingredientToIngredientCommand::convert)
-                .findFirst();
-
-        if (ingredientCommandOptional.isEmpty()) {
-            log.error("Ingredient id is not found. Id: " + ingredientId);
-        }
-
-        //enhance command object with recipe id
-        IngredientCommand ingredientCommand = ingredientCommandOptional.get();
-        ingredientCommand.setRecipeId(recipe.getId());
-
-        return Mono.just(ingredientCommand);
+        return recipeReactiveRepository.findById(recipeId)
+                .flatMapIterable(Recipe::getIngredients)
+                .filter(ingredient -> ingredient.getId().equalsIgnoreCase(ingredientId))
+                .single()
+                .map(ingredient -> {
+                    IngredientCommand ingredientCommand = ingredientToIngredientCommand.convert(ingredient);
+                    ingredientCommand.setRecipeId(recipeId);
+                    return ingredientCommand;
+                });
     }
 
     @Override
@@ -75,9 +62,12 @@ public class IngredientServiceImpl implements IngredientService {
             ingredient.setDescription(command.getDescription());
             ingredient.setAmount(command.getAmount());
 
-            UnitOfMeasure uom = unitOfMeasureRepository
-                    .findById(command.getUom().getId()).block();
+            UnitOfMeasure uom = unitOfMeasureRepository.findById(command.getUom().getId()).block();
             ingredient.setUom(uom);
+            if (Objects.isNull(ingredient.getUom())) {
+                throw new RuntimeException("UOM NOT FOUND");
+            }
+
         } else {
             // add new ingredient
             Ingredient ingredient = ingredientCommandToIngredient.convert(command);
